@@ -11,36 +11,8 @@
 	Transparency
 */
 
-#include <Windows.h>
-typedef struct sImage {
-	BITMAP bitmap;
-	HDC Image;
-	HDC Mask;
-	int width;
-	int height;
-}sImage;
-
-typedef struct RenderingObject {
-	sImage img;
-	int x;
-	int y;
-}RenderingObject;
-
-typedef struct RenderingQueueObject {
-	RenderingObject obj;
-	void(*Render)(RenderingObject obj);
-	struct RenderingQueueObject *prev;
-	struct RenderingQueueObject *next;
-}RenderingQueueObject;
-
-typedef struct RenderingQueue {
-	long size;
-	RenderingQueueObject * HEAD;
-}RenderingQueue;
-
-void initialzeScreen(int XSize, int YSize);
-void adjustScreenSize();
-void RenderObject(RenderingObject obj);
+#include "Renderer.h"
+#include <stdio.h>
 
 HANDLE Console;
 HWND Window;
@@ -63,13 +35,7 @@ void initialzeScreen(int XSize, int YSize) {
 	Cursor.dwSize = 1;
 	system("echo off");
 	system("cls");
-	SMALL_RECT size = { 0,0,77,47 };
-	SetConsoleWindowInfo(Console, TRUE, &size);
-
-	//adjustScreenSize();	
-	//RenderingQueueObject rqo;
-	//rqo.Render = RenderObject;
-	//rqo.Render(rqo.obj);
+	system("mode con:lines=54 cols=220");
 
 }
 
@@ -83,8 +49,14 @@ void RenderObject(RenderingObject obj) {
 	if (obj.img.Mask != NULL) {
 		BitBlt(BackDC, obj.x, obj.y, obj.img.width, obj.img.height, obj.img.Mask, 0, 0, SRCPAINT);
 		BitBlt(BackDC, obj.x, obj.y, obj.img.width, obj.img.height, obj.img.Image, 0, 0, SRCAND);
+		
 	}
 	else {
-		BitBlt(BackDC, obj.x, obj.y, obj.img.width, obj.img.height, obj.img.Image, 0, 0, SRCCOPY);
+		BitBlt(BackDC, obj.x, obj.y, obj.img.width, obj.img.height, obj.img.Image, 0, 0, WHITENESS);//dosen't work
+
 	}
+}
+
+void SwapBuffer() {
+	BitBlt(FrontDC, 0, 0, ScreenXSize, ScreenYSize, BackDC, 0, 0, SRCCOPY);//Work
 }
