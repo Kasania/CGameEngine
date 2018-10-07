@@ -21,5 +21,6 @@ typedef struct RenderingQueue {
 
 void initialzeScreen(int XSize, int YSize);
 void adjustScreenSize();
-void RenderObject(RenderingObject obj);
+void RenderObject(RenderingObject *obj);
+void resetBuffer();
 void SwapBuffer();

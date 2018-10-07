@@ -25,17 +25,19 @@ void initialzeScreen(int XSize, int YSize) {
 	ScreenXSize = XSize;
 	ScreenYSize = YSize;
 
-	Console = GetStdHandle(STD_OUTPUT_HANDLE);
-	Window = GetConsoleWindow();
-	FrontDC = GetDC(Window);
-	BackDC = CreateCompatibleDC(FrontDC);
-	RenderBuffer = CreateCompatibleBitmap(FrontDC, ScreenXSize, ScreenYSize);
+	system("mode con:lines=54 cols=220");
 	CONSOLE_CURSOR_INFO Cursor;
 	Cursor.bVisible = 0;
 	Cursor.dwSize = 1;
 	system("echo off");
 	system("cls");
-	system("mode con:lines=54 cols=220");
+
+	Console = GetStdHandle(STD_OUTPUT_HANDLE);
+	Window = GetConsoleWindow();
+	FrontDC = GetDC(Window);
+	BackDC = CreateCompatibleDC(FrontDC);
+	RenderBuffer = CreateCompatibleBitmap(FrontDC, ScreenXSize, ScreenYSize);
+	SelectObject(BackDC, RenderBuffer);
 
 }
 
@@ -45,18 +47,21 @@ void adjustScreenSize() {
 	//나중으로 미룸
 }
 
-void RenderObject(RenderingObject obj) {
-	if (obj.img.Mask != NULL) {
-		BitBlt(BackDC, obj.x, obj.y, obj.img.width, obj.img.height, obj.img.Mask, 0, 0, SRCPAINT);
-		BitBlt(BackDC, obj.x, obj.y, obj.img.width, obj.img.height, obj.img.Image, 0, 0, SRCAND);
-		
-	}
-	else {
-		BitBlt(BackDC, obj.x, obj.y, obj.img.width, obj.img.height, obj.img.Image, 0, 0, WHITENESS);//dosen't work
-
-	}
+void resetBuffer() {
+	BitBlt(BackDC, 0, 0, ScreenXSize, ScreenYSize, FrontDC, 0, 0, BLACKNESS);
 }
 
 void SwapBuffer() {
 	BitBlt(FrontDC, 0, 0, ScreenXSize, ScreenYSize, BackDC, 0, 0, SRCCOPY);//Work
+}
+
+void RenderObject(RenderingObject *obj) {
+	resetBuffer();
+	if (obj->img.Mask != NULL) {
+		BitBlt(BackDC, obj->x, obj->y, obj->img.width, obj->img.height, obj->img.Mask, 0, 0, SRCPAINT);
+		BitBlt(BackDC, obj->x, obj->y, obj->img.width, obj->img.height, obj->img.Image, 0, 0, SRCAND);
+	}
+	else {
+		BitBlt(BackDC, obj->x, obj->y, obj->img.width, obj->img.height, obj->img.Image, 0, 0, SRCCOPY);
+	}
 }
