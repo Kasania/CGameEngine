@@ -9,4 +9,17 @@ typedef struct sImage {
 	int height;
 }sImage;
 
-void ConvertBMPToSImageWithoutMask(sImage *dst, LPCWSTR dir);
+typedef struct RenderingObject {
+	sImage *img;
+	int x;
+	int y;
+}RObject;
+
+typedef struct RenderingObjectArray {
+	int maxSize;
+	int nextPos;
+	int (*Register)(sImage* obj);
+	RObject** array;
+}RObjectArray;
+
+int getRenderObjectHandle(LPCWSTR BMPdir);
