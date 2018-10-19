@@ -6,7 +6,7 @@
 */
 
 extern HDC FrontDC;
-RObjectArray RenderObjects;
+extern RObjectArray RenderObjects;
 
 void initializeImageLoader() {
 

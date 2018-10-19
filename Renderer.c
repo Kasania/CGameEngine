@@ -4,7 +4,7 @@
 /*
 	Create Render Object -> Register to Rendering Queue -> Draw BufferDC -> Swap to Show
 				   					  
-	BitMap					Queue[0] Draws First
+	BitMap					
 	if !Bitmap
 	convert to Bitmap
 	y0,y1, x0,x1						
@@ -19,7 +19,7 @@ HDC FrontDC;
 HDC BackDC;
 HBITMAP RenderBuffer;
 int ScreenXSize, ScreenYSize;
-extern RObjectArray RenderObjects;
+RObjectArray RenderObjects;
 
 void initialzeScreen(int XSize, int YSize) {
 	ScreenXSize = XSize;
@@ -75,19 +75,19 @@ void SwapBuffer() {
 	BitBlt(FrontDC, 0, 0, ScreenXSize, ScreenYSize, BackDC, 0, 0, SRCCOPY);//Work
 }
 
-void RenderObject(int handleNum) {
+void RenderRObject(int handleNum) {
 	assert(handleNum <= RenderObjects.maxSize);
 	resetBuffer();
 	if (RenderObjects.array[handleNum]->img->Mask != NULL) {
-		BitBlt(BackDC, RenderObjects.array[handleNum]->x, RenderObjects.array[handleNum]->y, 
+		BitBlt(BackDC, RenderObjects.array[handleNum]->xPos, RenderObjects.array[handleNum]->yPos, 
 			RenderObjects.array[handleNum]->img->width, RenderObjects.array[handleNum]->img->height, 
 			RenderObjects.array[handleNum]->img->Mask, 0, 0, SRCPAINT);
-		BitBlt(BackDC, RenderObjects.array[handleNum]->x, RenderObjects.array[handleNum]->y, 
+		BitBlt(BackDC, RenderObjects.array[handleNum]->xPos, RenderObjects.array[handleNum]->yPos, 
 			RenderObjects.array[handleNum]->img->width, RenderObjects.array[handleNum]->img->height, 
 			RenderObjects.array[handleNum]->img->Image, 0, 0, SRCAND);
 	}
 	else {
-		BitBlt(BackDC, RenderObjects.array[handleNum]->x, RenderObjects.array[handleNum]->y, 
+		BitBlt(BackDC, RenderObjects.array[handleNum]->xPos, RenderObjects.array[handleNum]->yPos, 
 			RenderObjects.array[handleNum]->img->width, RenderObjects.array[handleNum]->img->height,
 			RenderObjects.array[handleNum]->img->Image, 0, 0, SRCCOPY);
 	}
@@ -99,10 +99,14 @@ int registerObject(sImage *obj) {
 	RObject* newObject;
 	newObject = malloc(sizeof(RObject));
 	newObject->img = obj;
-	newObject->x = 0;
-	newObject->y = 0;
+	newObject->xPos = 0;
+	newObject->yPos = 0;
 	RenderObjects.array[RenderObjects.nextPos] = newObject;
 	return RenderObjects.nextPos++;
+}
+
+RObject* getRObject(int handle) {
+	return RenderObjects.array[handle];
 }
 
 void resetRenderingQueue() {

@@ -11,8 +11,8 @@ typedef struct sImage {
 
 typedef struct RenderingObject {
 	sImage *img;
-	int x;
-	int y;
+	int xPos;
+	int yPos;
 }RObject;
 
 typedef struct RenderingObjectArray {

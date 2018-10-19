@@ -8,6 +8,7 @@ void disposeScreen();
 void adjustScreenSize();
 void resetBuffer();
 void SwapBuffer();
-void RenderObject(int handle);
+void RenderRObject(int handle);
 int registerObject(sImage *obj);
+RObject* getRObject(int handle);
 void resetRenderingQueue();
