@@ -1,14 +1,27 @@
 #include "Renderer.h"
+#include "input.h"
+#include <stdio.h>
 
 int main() {
-	initialzeScreen(1760, 972);
+	initializeScreen(1910, 1000);
+	initializeRenderer();
+	initializeInput();
 
 	int handle = getRenderObjectHandle(L".\\res\\red.bmp");
 
 	while (1) {
+
+		UpdateKeys();
 		RenderRObject(handle);
-		getRObject(handle)->xPos += 1;
+
+		////if (mouse->dwButtonState) {
+			getRObject(handle)->xPos = mouse->dwMousePosition.X * 3;
+			getRObject(handle)->yPos = mouse->dwMousePosition.Y * 5;
+			printf("%d, %d\n", mouse->dwMousePosition.X * 3, mouse->dwMousePosition.Y * 5);
+		//	
+		////}
 		SwapBuffer();
+		
 	}
 	disposeScreen();
 	return 0;

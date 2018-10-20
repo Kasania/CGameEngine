@@ -121,14 +121,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ImageLoader.c" />
+    <ClCompile Include="input.c" />
     <ClCompile Include="Renderer.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Screen.c" />
     <ClCompile Include="TestField.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImageLoader.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Screen.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\11.bmp" />

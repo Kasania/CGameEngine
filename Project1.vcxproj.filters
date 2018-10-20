@@ -24,12 +24,24 @@
     <ClCompile Include="ImageLoader.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="input.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ImageLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

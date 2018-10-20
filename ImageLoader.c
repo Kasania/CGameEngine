@@ -12,11 +12,11 @@ void initializeImageLoader() {
 
 }
 
-int getRenderObjectHandle(LPCWSTR BMPdir) {
+int getRenderObjectHandle(LPCWSTR BMPpath) {
 	BITMAP tmpBtm;
 	sImage *dst;
 	dst = malloc(sizeof(sImage));
-	dst->bitmap = (HBITMAP)LoadImage(NULL, BMPdir, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	dst->bitmap = (HBITMAP)LoadImage(NULL, BMPpath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 	GetObject(dst->bitmap, sizeof(BITMAP), &tmpBtm);
 	dst->width = tmpBtm.bmWidth;
 	dst->height = tmpBtm.bmHeight;
