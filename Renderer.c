@@ -54,12 +54,13 @@ void RenderRObject(int handleNum) {
 int registerObject(sImage *obj) {
 	assert(RenderObjects.nextPos <= RenderObjects.maxSize);
 
-	RObject* newObject;
-	newObject = malloc(sizeof(RObject));
-	newObject->img = obj;
-	newObject->xPos = 0;
-	newObject->yPos = 0;
-	RenderObjects.array[RenderObjects.nextPos] = newObject;
+	RObject* newObject = (RObject*)malloc(sizeof(RObject));
+	if (newObject) {
+		newObject->img = obj;
+		newObject->xPos = 0;
+		newObject->yPos = 0;
+		RenderObjects.array[RenderObjects.nextPos] = newObject;
+	}
 	return RenderObjects.nextPos++;
 }
 

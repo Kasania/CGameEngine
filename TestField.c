@@ -3,11 +3,11 @@
 #include <stdio.h>
 
 int main() {
-	initializeScreen(1910, 1000);
+	initializeScreen(1600, 900); 
 	initializeRenderer();
 	initializeInput();
 
-	int handle = getRenderObjectHandle(L".\\res\\red.bmp");
+	int handle = getRenderObjectHandle(L".\\res\\red.bmp"); 
 
 	while (1) {
 

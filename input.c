@@ -3,7 +3,7 @@
 extern HANDLE ConsoleIn;
 
 INPUT_RECORD ir[64];
-LPDWORD nRead;
+DWORD nRead = 0;
 
 
 void initializeInput() {

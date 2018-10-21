@@ -12,39 +12,33 @@ int ScreenXSize, ScreenYSize;
 DWORD ConsoleDefaultMode;
 CONSOLE_FONT_INFOEX font = { sizeof(font) };
 
+COORD consoleBuffer;
+SMALL_RECT consoleSize;
 
 void initializeScreen(int XSize, int YSize) {
-	ScreenXSize = XSize;
-	ScreenYSize = YSize;
-	//TODO : convert to line, column
-
-	CONSOLE_CURSOR_INFO Cursor;
-	Cursor.bVisible = 0;
-	Cursor.dwSize = 0;
-	system("mode con:lines=200 cols=635");
-	system("echo off");
-	system("cls");
-
-	GetCurrentConsoleFontEx(ConsoleOut, FALSE, &font);
-	font.dwFontSize.X = 3;
-	font.dwFontSize.Y = 5;
-	SetCurrentConsoleFontEx(ConsoleOut, FALSE, &font);
-	//printf("%d, %d", font.dwFontSize.X, font.dwFontSize.Y);
-
-	
+	ScreenXSize = XSize ;
+	ScreenYSize = YSize ;
 
 	ConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	ConsoleIn = GetStdHandle(STD_INPUT_HANDLE);
+	Window = GetConsoleWindow();
+
+	/*CONSOLE_CURSOR_INFO Cursor;
+	Cursor.bVisible = 0;
+	Cursor.dwSize = 0;
+	SetConsoleCursorInfo(ConsoleOut, &Cursor);*/
+
+	system("echo off");
+	system("cls");
+
+	adjustScreenSize();
 
 	GetConsoleMode(ConsoleIn, &ConsoleDefaultMode);
 	SetConsoleMode(ConsoleIn, ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT | ENABLE_EXTENDED_FLAGS);
-
-	Window = GetConsoleWindow();
 	FrontDC = GetDC(Window);
 	BackDC = CreateCompatibleDC(FrontDC);
 	RenderBuffer = CreateCompatibleBitmap(FrontDC, ScreenXSize, ScreenYSize);
 	SelectObject(BackDC, RenderBuffer);
-
 	
 }
 
@@ -59,7 +53,24 @@ void disposeScreen() {
 }
 
 void adjustScreenSize() {
-	//HKEY key;
-	//Registry 작업, 사지방에서 불가능 함
-	//나중으로 미룸
+
+	GetCurrentConsoleFontEx(ConsoleOut, FALSE, &font);
+	font.dwFontSize.X = 3;
+	font.dwFontSize.Y = 5;
+	SetCurrentConsoleFontEx(ConsoleOut, FALSE, &font);
+
+	consoleBuffer.X = ScreenXSize / font.dwFontSize.X;
+	consoleBuffer.Y = ScreenYSize / font.dwFontSize.Y;
+
+	consoleSize.Left = 0;
+	consoleSize.Top = 0;
+	consoleSize.Right = consoleBuffer.X - 1;
+	consoleSize.Bottom = consoleBuffer.Y - 1;
+	SetWindowPos(Window, HWND_TOP, 0, 0, ScreenXSize + 36, ScreenYSize + 72, SWP_SHOWWINDOW);// Value?
+	
+	//SetConsoleWindowInfo(ConsoleOut, TRUE, &consoleSize);
+	/*int e = GetLastError();
+	printf("%d", e);*/
+	
+	SetConsoleScreenBufferSize(ConsoleOut, consoleBuffer);
 }
