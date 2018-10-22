@@ -14,12 +14,14 @@ int main() {
 		UpdateKeys();
 		RenderRObject(handle);
 
-		////if (mouse->dwButtonState) {
-			getRObject(handle)->xPos = mouse->dwMousePosition.X * 3;
-			getRObject(handle)->yPos = mouse->dwMousePosition.Y * 5;
-			printf("%d, %d\n", mouse->dwMousePosition.X * 3, mouse->dwMousePosition.Y * 5);
-		//	
-		////}
+		if (mouse.dwButtonState) {
+		getRObject(handle)->xPos = mouse.dwMousePosition.X * 3;
+		getRObject(handle)->yPos = mouse.dwMousePosition.Y * 5;
+		}
+		if (KeySet['D'] == Press) {
+			getRObject(handle)->yPos += 10; 
+		}
+
 		SwapBuffer();
 		
 	}

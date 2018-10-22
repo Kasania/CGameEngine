@@ -34,7 +34,8 @@ void initializeScreen(int XSize, int YSize) {
 	adjustScreenSize();
 
 	GetConsoleMode(ConsoleIn, &ConsoleDefaultMode);
-	SetConsoleMode(ConsoleIn, ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT | ENABLE_EXTENDED_FLAGS);
+	SetConsoleMode(ConsoleIn, ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT 
+		| ENABLE_EXTENDED_FLAGS | ENABLE_PROCESSED_INPUT | ENABLE_ECHO_INPUT);
 	FrontDC = GetDC(Window);
 	BackDC = CreateCompatibleDC(FrontDC);
 	RenderBuffer = CreateCompatibleBitmap(FrontDC, ScreenXSize, ScreenYSize);

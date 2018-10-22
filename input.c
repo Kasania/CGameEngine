@@ -7,23 +7,34 @@ DWORD nRead = 0;
 
 
 void initializeInput() {
-	mouse = &ir->Event.MouseEvent;
+	mouse = ir->Event.MouseEvent;
+	
 }
 
-void UpdateKeys() {//change to ReadConsoleInput
+void UpdateKeys() {//speed issue?
 	FlushConsoleInputBuffer(ConsoleIn);
-	for (int i = 0; i < 256; ++i) {
-		if (GetAsyncKeyState(i) & 0x8000) {
-			if (KeySet[i] == NonPress) KeySet[i] = Press;
-			else if (KeySet[i] == Press) KeySet[i] = Hold;
-		}
-		else if (!GetAsyncKeyState(i)) {
-			if (KeySet[i] == Press || KeySet[i] == Hold) KeySet[i] = Release;
-			else if (KeySet[i] == Release) KeySet[i] = NonPress;
-		}
-	}
 	ReadConsoleInput(ConsoleIn, ir, sizeof(INPUT_RECORD), &nRead);
 	
+	for (int i = 0; i < 64; ++i) {
+		if (ir[i].EventType) {
+
+			if (ir[i].EventType == KEY_EVENT) {
+
+				if (ir[i].Event.KeyEvent.bKeyDown == 0) {
+					KeySet[(int)ir[i].Event.KeyEvent.wVirtualKeyCode] = NonPress;
+				}
+				else if (ir[i].Event.KeyEvent.bKeyDown == 1) {
+					KeySet[ir[i].Event.KeyEvent.wVirtualKeyCode] = Press;
+				}
+
+			}
+			else if(ir[i].EventType == MOUSE_EVENT){
+				mouse = ir[i].Event.MouseEvent;
+			}
+			ir[i].EventType = 0;
+		}
+	}
+
 }
 
 void UpdateInput() {

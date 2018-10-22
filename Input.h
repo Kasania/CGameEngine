@@ -9,6 +9,6 @@ enum KeyStatus {
 	Release
 };
 enum KeyStatus KeySet[256];
-MOUSE_EVENT_RECORD *mouse;
+MOUSE_EVENT_RECORD mouse;
 void initializeInput();
 void UpdateKeys();
