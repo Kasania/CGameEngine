@@ -8,7 +8,14 @@ enum KeyStatus {
 	Hold,
 	Release
 };
+
+typedef struct _Mouse {
+	enum KeyStatus *LB;
+	enum KeyStatus *RB;
+	POINT pos;
+}Mouse;
+
 enum KeyStatus KeySet[256];
-MOUSE_EVENT_RECORD mouse;
+Mouse mouse;
 void initializeInput();
 void UpdateKeys();

@@ -1,38 +1,28 @@
 #include "input.h"
 
 extern HANDLE ConsoleIn;
-
-INPUT_RECORD ir[64];
-DWORD nRead = 0;
-
+extern HWND Window;
 
 void initializeInput() {
-	mouse = ir->Event.MouseEvent;
-	
+	mouse.LB = &KeySet[VK_LBUTTON];
+	mouse.RB = &KeySet[VK_RBUTTON];
 }
 
 void UpdateKeys() {//speed issue?
-	FlushConsoleInputBuffer(ConsoleIn);
-	ReadConsoleInput(ConsoleIn, ir, sizeof(INPUT_RECORD), &nRead);
-	
-	for (int i = 0; i < 64; ++i) {
-		if (ir[i].EventType) {
-
-			if (ir[i].EventType == KEY_EVENT) {
-
-				if (ir[i].Event.KeyEvent.bKeyDown == 0) {
-					KeySet[(int)ir[i].Event.KeyEvent.wVirtualKeyCode] = NonPress;
-				}
-				else if (ir[i].Event.KeyEvent.bKeyDown == 1) {
-					KeySet[ir[i].Event.KeyEvent.wVirtualKeyCode] = Press;
-				}
-
+	if (Window == GetForegroundWindow()) {
+		for (int i = 0; i < 256; ++i) {
+			if (GetAsyncKeyState(i) & 0x8000) {
+				if (KeySet[i] == NonPress) KeySet[i] = Press;
+				else if (KeySet[i] == Press) KeySet[i] = Hold;
 			}
-			else if(ir[i].EventType == MOUSE_EVENT){
-				mouse = ir[i].Event.MouseEvent;
+			else if (!GetAsyncKeyState(i)) {
+				if (KeySet[i] == Press || KeySet[i] == Hold) KeySet[i] = Release;
+				else if (KeySet[i] == Release) KeySet[i] = NonPress;
 			}
-			ir[i].EventType = 0;
 		}
+
+		GetCursorPos(&mouse.pos);
+		ScreenToClient(Window, &mouse.pos);
 	}
 
 }

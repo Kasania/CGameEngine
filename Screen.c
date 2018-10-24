@@ -70,8 +70,7 @@ void adjustScreenSize() {
 	SetWindowPos(Window, HWND_TOP, 0, 0, ScreenXSize + 36, ScreenYSize + 72, SWP_SHOWWINDOW);// Value?
 	
 	//SetConsoleWindowInfo(ConsoleOut, TRUE, &consoleSize);
-	/*int e = GetLastError();
-	printf("%d", e);*/
+	
 	
 	SetConsoleScreenBufferSize(ConsoleOut, consoleBuffer);
 }

@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "input.h"
 #include <stdio.h>
+#include <time.h>
 
 int main() {
 	initializeScreen(1600, 900); 
@@ -9,17 +10,35 @@ int main() {
 
 	int handle = getRenderObjectHandle(L".\\res\\red.bmp"); 
 
-	while (1) {
+	struct timespec t1;
+	struct timespec t2;
 
+	while (1) {
+		timespec_get(&t1, TIME_UTC);
 		UpdateKeys();
+		timespec_get(&t2, TIME_UTC);
+		
+		long diff = t2.tv_nsec - t1.tv_nsec;
+		//printf("%ld\n", diff);
+
 		RenderRObject(handle);
 
-		if (mouse.dwButtonState) {
-		getRObject(handle)->xPos = mouse.dwMousePosition.X * 3;
-		getRObject(handle)->yPos = mouse.dwMousePosition.Y * 5;
+		if (*mouse.LB != NonPress) {
+			getRObject(handle)->xPos = mouse.pos.x;
+			getRObject(handle)->yPos = mouse.pos.y;
 		}
-		if (KeySet['D'] == Press) {
-			getRObject(handle)->yPos += 10; 
+
+		if (KeySet['W']) {
+			getRObject(handle)->yPos -= 5;
+		}
+		if (KeySet['S']) {
+			getRObject(handle)->yPos += 5;
+		}
+		if (KeySet['A']) {
+			getRObject(handle)->xPos -= 5;
+		}
+		if (KeySet['D']) {
+			getRObject(handle)->xPos += 5; 
 		}
 
 		SwapBuffer();
