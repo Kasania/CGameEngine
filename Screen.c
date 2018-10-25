@@ -43,7 +43,6 @@ void disposeScreen() {
 
 void adjustScreenSize() {
 
-	//independency from buffersize
 	CONSOLE_FONT_INFO font = { 0 };
 
 	GetCurrentConsoleFont(ConsoleOut, FALSE, &font);
@@ -57,7 +56,7 @@ void adjustScreenSize() {
 	consoleSize.Top = 0;
 	consoleSize.Right = consoleBuffer.X - 1;
 	consoleSize.Bottom = consoleBuffer.Y - 1;
-	SetWindowPos(Window, HWND_TOP, 0, 0, ScreenXSize, ScreenYSize, SWP_NOSIZE);// Value?
+	SetWindowPos(Window, HWND_TOP, 0, 0, ScreenXSize, ScreenYSize, SWP_NOSIZE);
 	
 	SetConsoleWindowInfo(ConsoleOut, TRUE, &consoleSize);
 	SetConsoleScreenBufferSize(ConsoleOut, consoleBuffer);

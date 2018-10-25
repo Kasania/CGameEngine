@@ -31,11 +31,11 @@ void resetBuffer() {
 
 void SwapBuffer() {
 	BitBlt(FrontDC, 0, 0, ScreenXSize, ScreenYSize, BackDC, 0, 0, SRCCOPY);//Work
+	resetBuffer();
 }
 
 void RenderRObject(int handleNum) {
 	assert(handleNum <= RenderObjects.maxSize);
-	resetBuffer();
 	if (RenderObjects.array[handleNum]->img->Mask != NULL) {
 		BitBlt(BackDC, RenderObjects.array[handleNum]->xPos, RenderObjects.array[handleNum]->yPos, 
 			RenderObjects.array[handleNum]->img->width, RenderObjects.array[handleNum]->img->height, 

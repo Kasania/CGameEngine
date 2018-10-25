@@ -8,10 +8,14 @@ int main() {
 	initializeRenderer();
 	initializeInput();
 
-	int handle = getRenderObjectHandle(L".\\res\\red.bmp"); 
+	int red = getRenderObjectHandle(L".\\res\\red.bmp"); 
+	int a = getRenderObjectHandle(L".\\res\\a.bmp");
 
 	struct timespec t1;
 	struct timespec t2;
+
+	getRObject(red)->xPos = 100;
+	getRObject(red)->yPos = 200;
 
 	while (1) {
 		timespec_get(&t1, TIME_UTC);
@@ -21,24 +25,26 @@ int main() {
 		long diff = t2.tv_nsec - t1.tv_nsec;
 		//printf("%ld\n", diff);
 
-		RenderRObject(handle);
+		RenderRObject(a);
+		RenderRObject(red);
+
 
 		if (*mouse.LB != NonPress) {
-			getRObject(handle)->xPos = mouse.pos.x;
-			getRObject(handle)->yPos = mouse.pos.y;
+			getRObject(red)->xPos = mouse.pos.x;
+			getRObject(red)->yPos = mouse.pos.y;
 		}
 
 		if (KeySet['W']) {
-			getRObject(handle)->yPos -= 5;
+			getRObject(red)->yPos -= 5;
 		}
 		if (KeySet['S']) {
-			getRObject(handle)->yPos += 5;
+			getRObject(red)->yPos += 5;
 		}
 		if (KeySet['A']) {
-			getRObject(handle)->xPos -= 5;
+			getRObject(red)->xPos -= 5;
 		}
 		if (KeySet['D']) {
-			getRObject(handle)->xPos += 5; 
+			getRObject(red)->xPos += 5; 
 		}
 
 		SwapBuffer();
