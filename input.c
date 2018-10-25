@@ -1,6 +1,5 @@
 #include "input.h"
 
-extern HANDLE ConsoleIn;
 extern HWND Window;
 
 void initializeInput() {
@@ -8,7 +7,7 @@ void initializeInput() {
 	mouse.RB = &KeySet[VK_RBUTTON];
 }
 
-void UpdateKeys() {//speed issue?
+void UpdateInput() {
 	if (Window == GetForegroundWindow()) {
 		for (int i = 0; i < 256; ++i) {
 			if (GetAsyncKeyState(i) & 0x8000) {
@@ -24,11 +23,5 @@ void UpdateKeys() {//speed issue?
 		GetCursorPos(&mouse.pos);
 		ScreenToClient(Window, &mouse.pos);
 	}
-
-}
-
-void UpdateInput() {
-	FlushConsoleInputBuffer(ConsoleIn);
-
 }
 

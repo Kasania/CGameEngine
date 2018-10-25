@@ -18,4 +18,4 @@ typedef struct _Mouse {
 enum KeyStatus KeySet[256];
 Mouse mouse;
 void initializeInput();
-void UpdateKeys();
+void UpdateInput();

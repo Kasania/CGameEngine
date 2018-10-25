@@ -1,7 +1,6 @@
 #include "Screen.h"
 #include <stdio.h>
 HANDLE ConsoleOut;
-HANDLE ConsoleIn;
 
 HWND Window;
 HDC FrontDC;
@@ -9,33 +8,23 @@ HDC BackDC;
 HBITMAP RenderBuffer;
 int ScreenXSize, ScreenYSize;
 
-DWORD ConsoleDefaultMode;
-CONSOLE_FONT_INFOEX font = { sizeof(font) };
-
-COORD consoleBuffer;
-SMALL_RECT consoleSize;
-
 void initializeScreen(int XSize, int YSize) {
 	ScreenXSize = XSize ;
 	ScreenYSize = YSize ;
 
 	ConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	ConsoleIn = GetStdHandle(STD_INPUT_HANDLE);
 	Window = GetConsoleWindow();
 
-	/*CONSOLE_CURSOR_INFO Cursor;
+	CONSOLE_CURSOR_INFO Cursor;
 	Cursor.bVisible = 0;
 	Cursor.dwSize = 0;
-	SetConsoleCursorInfo(ConsoleOut, &Cursor);*/
+	SetConsoleCursorInfo(ConsoleOut, &Cursor);
 
 	system("echo off");
 	system("cls");
 
 	adjustScreenSize();
 
-	GetConsoleMode(ConsoleIn, &ConsoleDefaultMode);
-	SetConsoleMode(ConsoleIn, ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT 
-		| ENABLE_EXTENDED_FLAGS | ENABLE_PROCESSED_INPUT | ENABLE_ECHO_INPUT);
 	FrontDC = GetDC(Window);
 	BackDC = CreateCompatibleDC(FrontDC);
 	RenderBuffer = CreateCompatibleBitmap(FrontDC, ScreenXSize, ScreenYSize);
@@ -49,28 +38,30 @@ void disposeScreen() {
 	DeleteDC(BackDC);
 	ReleaseDC(Window, FrontDC);
 	DeleteObject(RenderBuffer);
-	SetConsoleMode(ConsoleIn, ConsoleDefaultMode);
 	
 }
 
 void adjustScreenSize() {
 
-	GetCurrentConsoleFontEx(ConsoleOut, FALSE, &font);
-	font.dwFontSize.X = 3;
-	font.dwFontSize.Y = 5;
-	SetCurrentConsoleFontEx(ConsoleOut, FALSE, &font);
+	//independency from buffersize
+	CONSOLE_FONT_INFO font = { 0 };
 
+	GetCurrentConsoleFont(ConsoleOut, FALSE, &font);
+	
+	COORD consoleBuffer;
 	consoleBuffer.X = ScreenXSize / font.dwFontSize.X;
 	consoleBuffer.Y = ScreenYSize / font.dwFontSize.Y;
 
+	SMALL_RECT consoleSize;
 	consoleSize.Left = 0;
 	consoleSize.Top = 0;
 	consoleSize.Right = consoleBuffer.X - 1;
 	consoleSize.Bottom = consoleBuffer.Y - 1;
-	SetWindowPos(Window, HWND_TOP, 0, 0, ScreenXSize + 36, ScreenYSize + 72, SWP_SHOWWINDOW);// Value?
+	SetWindowPos(Window, HWND_TOP, 0, 0, ScreenXSize, ScreenYSize, SWP_NOSIZE);// Value?
 	
-	//SetConsoleWindowInfo(ConsoleOut, TRUE, &consoleSize);
-	
-	
+	SetConsoleWindowInfo(ConsoleOut, TRUE, &consoleSize);
 	SetConsoleScreenBufferSize(ConsoleOut, consoleBuffer);
+	
+	/*int e = GetLastError();
+	printf("%d", e);*/
 }

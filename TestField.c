@@ -15,7 +15,7 @@ int main() {
 
 	while (1) {
 		timespec_get(&t1, TIME_UTC);
-		UpdateKeys();
+		UpdateInput();
 		timespec_get(&t2, TIME_UTC);
 		
 		long diff = t2.tv_nsec - t1.tv_nsec;
