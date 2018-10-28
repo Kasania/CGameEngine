@@ -1,21 +1,24 @@
 #include "Renderer.h"
 #include "input.h"
-#include <stdio.h>
 #include <time.h>
 
 int main() {
-	initializeScreen(1600, 900); 
-	initializeRenderer();
-	initializeInput();
+	InitializeScreen(1600, 900); 
+	InitializeRenderer();
+	InitializeInput();
 
-	int red = getRenderObjectHandle(L".\\res\\red.bmp"); 
-	int a = getRenderObjectHandle(L".\\res\\a.bmp");
+	int red = GetRenderObjectHandle(L".\\res\\red.bmp"); 
+	int a = GetRenderObjectHandle(L".\\res\\a.bmp");
+	int lena = GetRenderObjectHandle(L".\\res\\lena256.bmp");
 
 	struct timespec t1;
 	struct timespec t2;
 
-	getRObject(red)->xPos = 100;
-	getRObject(red)->yPos = 200;
+	GetRObject(red)->xPos = 800;
+	GetRObject(red)->yPos = 400;
+
+	GetRObject(lena)->xPos = 800;
+	GetRObject(lena)->yPos = 400;
 
 	while (1) {
 		timespec_get(&t1, TIME_UTC);
@@ -25,31 +28,45 @@ int main() {
 		long diff = t2.tv_nsec - t1.tv_nsec;
 		//printf("%ld\n", diff);
 
-		RenderRObject(a);
+		//RenderRObject(a);
 		RenderRObject(red);
-
+		
+		RenderRObject(lena);
+		RotateRObject(red, 1.0f);
 
 		if (*mouse.LB != NonPress) {
-			getRObject(red)->xPos = mouse.pos.x;
-			getRObject(red)->yPos = mouse.pos.y;
+			GetRObject(lena)->xPos = mouse.pos.x;
+			GetRObject(lena)->yPos = mouse.pos.y;
 		}
 
-		if (KeySet['W']) {
-			getRObject(red)->yPos -= 5;
+		if (KeySet['W'] == Press) {
+
+			//RotateRObject(red, 180.0f);
+			//GetRObject(a)->yPos -= 5;
+		}
+		if (KeySet['Q']) {
+
+			RotateRObject(red, 5.0f);
+			//GetRObject(a)->yPos -= 5;
+		}
+		if (KeySet['E']) {
+
+			RotateRObject(red, -5.0f);
+			//GetRObject(a)->yPos -= 5;
 		}
 		if (KeySet['S']) {
-			getRObject(red)->yPos += 5;
+			GetRObject(a)->yPos += 5;
 		}
 		if (KeySet['A']) {
-			getRObject(red)->xPos -= 5;
+			GetRObject(a)->xPos -= 5;
 		}
 		if (KeySet['D']) {
-			getRObject(red)->xPos += 5; 
+			GetRObject(a)->xPos += 5; 
 		}
 
 		SwapBuffer();
 		
 	}
-	disposeScreen();
+	DisposeScreen();
 	return 0;
 }

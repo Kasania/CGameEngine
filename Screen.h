@@ -1,8 +1,8 @@
 #pragma once
 #include <Windows.h>
 
-void initializeScreen(int XSize, int YSize);
-void disposeScreen();
-void adjustScreenSize();
+void InitializeScreen(int XSize, int YSize);
+void DisposeScreen();
+void _adjustScreenSize();
 
-extern void disposeRObjectArray();
+extern void _disposeRObjectArray();

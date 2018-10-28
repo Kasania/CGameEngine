@@ -13,6 +13,8 @@ typedef struct RenderingObject {
 	sImage *img;
 	int xPos;
 	int yPos;
+	float rotateDegree;
+	POINT *rotatePoint;
 }RObject;
 
 typedef struct RenderingObjectArray {
@@ -22,4 +24,4 @@ typedef struct RenderingObjectArray {
 	RObject** array;
 }RObjectArray;
 
-int getRenderObjectHandle(LPCWSTR BMPdir);
+int GetRenderObjectHandle(LPCWSTR BMPdir);

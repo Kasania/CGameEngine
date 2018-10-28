@@ -2,7 +2,7 @@
 
 extern HWND Window;
 
-void initializeInput() {
+void InitializeInput() {
 	mouse.LB = &KeySet[VK_LBUTTON];
 	mouse.RB = &KeySet[VK_RBUTTON];
 }

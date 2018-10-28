@@ -6,17 +6,17 @@
 */
 
 extern HDC FrontDC;
-extern RObjectArray RenderObjects;
+extern RObjectArray _renderObjects;
 
-void initializeImageLoader() {
-
+void InitializeImageLoader() {
+	
 }
 
-int getRenderObjectHandle(LPCWSTR BMPpath) {
+int GetRenderObjectHandle(LPCWSTR BMPpath) {
 	BITMAP tmpBtm;
 	sImage *dst = (sImage*)malloc(sizeof(sImage));
 	if (dst) {
-		dst->bitmap = (HBITMAP)LoadImage(NULL, BMPpath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+		dst->bitmap = (HBITMAP)LoadImage(NULL, BMPpath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION | LR_VGACOLOR);
 		GetObject(dst->bitmap, sizeof(BITMAP), &tmpBtm);
 		dst->width = tmpBtm.bmWidth;
 		dst->height = tmpBtm.bmHeight;
@@ -25,7 +25,7 @@ int getRenderObjectHandle(LPCWSTR BMPpath) {
 		dst->Mask = NULL;
 	}
 
-	return RenderObjects.Register(dst);
+	return _renderObjects.Register(dst);
 }
 
 void ConvertPNGToSImage(sImage *dst, LPCWSTR dir) {

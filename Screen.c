@@ -8,7 +8,7 @@ HDC BackDC;
 HBITMAP RenderBuffer;
 int ScreenXSize, ScreenYSize;
 
-void initializeScreen(int XSize, int YSize) {
+void InitializeScreen(int XSize, int YSize) {
 	ScreenXSize = XSize ;
 	ScreenYSize = YSize ;
 
@@ -23,17 +23,19 @@ void initializeScreen(int XSize, int YSize) {
 	system("echo off");
 	system("cls");
 
-	adjustScreenSize();
+	_adjustScreenSize();
 
 	FrontDC = GetDC(Window);
 	BackDC = CreateCompatibleDC(FrontDC);
 	RenderBuffer = CreateCompatibleBitmap(FrontDC, ScreenXSize, ScreenYSize);
 	SelectObject(BackDC, RenderBuffer);
-	
+
+	//int e = GetLastError();
+	//printf("%d", e);
 }
 
-void disposeScreen() {
-	disposeRObjectArray();
+void DisposeScreen() {
+	_disposeRObjectArray();
 	
 	DeleteDC(BackDC);
 	ReleaseDC(Window, FrontDC);
@@ -41,7 +43,7 @@ void disposeScreen() {
 	
 }
 
-void adjustScreenSize() {
+void _adjustScreenSize() {
 
 	CONSOLE_FONT_INFO font = { 0 };
 
