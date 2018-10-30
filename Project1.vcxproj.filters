@@ -30,10 +30,13 @@
     <ClCompile Include="ImageLoader.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="input.c">
+    <ClCompile Include="Screen.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Screen.c">
+    <ClCompile Include="Image.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,10 +47,13 @@
     <ClInclude Include="ImageLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="input.h">
+    <ClInclude Include="Screen.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Screen.h">
+    <ClInclude Include="Image.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

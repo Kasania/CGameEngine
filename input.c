@@ -1,6 +1,4 @@
-#include "input.h"
-
-extern HWND Window;
+#include "Input.h"
 
 void InitializeInput() {
 	mouse.LB = &KeySet[VK_LBUTTON];
@@ -19,7 +17,6 @@ void UpdateInput() {
 				else if (KeySet[i] == Release) KeySet[i] = NonPress;
 			}
 		}
-
 		GetCursorPos(&mouse.pos);
 		ScreenToClient(Window, &mouse.pos);
 	}

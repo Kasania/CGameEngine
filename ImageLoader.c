@@ -6,7 +6,7 @@
 */
 
 extern HDC FrontDC;
-extern RObjectArray _renderObjects;
+//extern RObjectArray _renderObjects;
 
 void InitializeImageLoader() {
 	
@@ -25,7 +25,7 @@ int GetRenderObjectHandle(LPCWSTR BMPpath) {
 		dst->Mask = NULL;
 	}
 
-	return _renderObjects.Register(dst);
+	return _registerRObject(dst);
 }
 
 void ConvertPNGToSImage(sImage *dst, LPCWSTR dir) {

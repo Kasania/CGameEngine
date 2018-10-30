@@ -1,12 +1,8 @@
 #include "Screen.h"
 #include <stdio.h>
-HANDLE ConsoleOut;
 
-HWND Window;
-HDC FrontDC;
-HDC BackDC;
+HANDLE ConsoleOut;
 HBITMAP RenderBuffer;
-int ScreenXSize, ScreenYSize;
 
 void InitializeScreen(int XSize, int YSize) {
 	ScreenXSize = XSize ;
