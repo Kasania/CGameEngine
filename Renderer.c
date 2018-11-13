@@ -1,16 +1,3 @@
-// GDI/Win32를 이용
-// Console에서 2D 그래픽 출력용
-// Windows에서만 동작함
-/*
-	Create Render Object -> Register to Rendering Queue -> Draw BufferDC -> Swap to Show
-				   					  
-	BitMap					
-	if !Bitmap
-	convert to Bitmap
-	y0,y1, x0,x1						
-	Transparency
-*/
-
 #include "Renderer.h"
 
 void InitializeRenderer() {
@@ -18,26 +5,12 @@ void InitializeRenderer() {
 }
 
 void RenderRObject(int handleNum) {
-	assert(handleNum <= _renderObjects.maxSize);
-	if (_renderObjects.array[handleNum]->rotateDegree!=0.0f) {
+	assert(handleNum <= _RObjects.maxSize);
+	if (_RObjects.array[handleNum]->rotateDegree!=0.0f) {
 		_renderRotatedRObject(handleNum);
-		return;
-	}
-	int _x = _renderObjects.array[handleNum]->xPos - _renderObjects.array[handleNum]->img->width / 2;
-	int _y = _renderObjects.array[handleNum]->yPos - _renderObjects.array[handleNum]->img->height / 2;
-
-	if (_renderObjects.array[handleNum]->img->Mask != NULL) {
-		BitBlt(BackDC, _x, _y, 
-			_renderObjects.array[handleNum]->img->width, _renderObjects.array[handleNum]->img->height, 
-			_renderObjects.array[handleNum]->img->Mask, 0, 0, SRCPAINT);
-		BitBlt(BackDC, _x, _y, 
-			_renderObjects.array[handleNum]->img->width, _renderObjects.array[handleNum]->img->height, 
-			_renderObjects.array[handleNum]->img->Image, 0, 0, SRCAND);
 	}
 	else {
-		BitBlt(BackDC, _x, _y, 
-			_renderObjects.array[handleNum]->img->width, _renderObjects.array[handleNum]->img->height,
-			_renderObjects.array[handleNum]->img->Image, 0, 0, SRCCOPY);
+		_renderDefaultRObject(handleNum);
 	}
 }
 
@@ -50,13 +23,31 @@ void resetBuffer() {
 	BitBlt(BackDC, 0, 0, ScreenXSize, ScreenYSize, FrontDC, 0, 0, BLACKNESS);
 }
 
-void _renderRotatedRObject(int handleNum) {
-	_rotateRObject(_renderObjects.array[handleNum], _renderObjects.array[handleNum]->rotateDegree);
-	PlgBlt(BackDC, _renderObjects.array[handleNum]->rotatePoint, _renderObjects.array[handleNum]->img->Image,
-		0, 0, _renderObjects.array[handleNum]->img->width, _renderObjects.array[handleNum]->img->height,
-		NULL, 0, 0);
+void _renderDefaultRObject(int handleNum) {
+	int _x = _RObjects.array[handleNum]->xPos - _RObjects.array[handleNum]->img->width / 2;
+	int _y = _RObjects.array[handleNum]->yPos - _RObjects.array[handleNum]->img->height / 2;
+
+	if (_RObjects.array[handleNum]->img->Mask != NULL) {
+		BitBlt(BackDC, _x, _y,
+			_RObjects.array[handleNum]->img->width, _RObjects.array[handleNum]->img->height,
+			_RObjects.array[handleNum]->img->Mask, 0, 0, SRCPAINT);
+		BitBlt(BackDC, _x, _y,
+			_RObjects.array[handleNum]->img->width, _RObjects.array[handleNum]->img->height,
+			_RObjects.array[handleNum]->img->Image, 0, 0, SRCAND);
+	}
+	else {
+		BitBlt(BackDC, _x, _y,
+			_RObjects.array[handleNum]->img->width, _RObjects.array[handleNum]->img->height,
+			_RObjects.array[handleNum]->img->Image, 0, 0, SRCCOPY);
+	}
 }
 
-void resetRenderingQueue() {
-	_renderObjects.nextPos = 0;
+void _renderRotatedRObject(int handleNum) {
+	int _x = _RObjects.array[handleNum]->xPos - _RObjects.array[handleNum]->diagSize/ 2;
+	int _y = _RObjects.array[handleNum]->yPos - _RObjects.array[handleNum]->diagSize / 2;
+
+	RObject* Target = _RObjects.array[handleNum];
+	BitBlt(BackDC, _x, _y, Target->diagSize, Target->diagSize, Target->RotatedMaskImage, 0, 0, MERGEPAINT);
+	BitBlt(BackDC, _x, _y, Target->diagSize, Target->diagSize, Target->RotatedImage, 0, 0, SRCAND);
+
 }

@@ -1,20 +1,24 @@
 #include "Image.h"
+#include <stdio.h>
+
+extern HDC BackDC;
 
 RObject* GetRObject(int handle) {
-	return _renderObjects.array[handle];
+	return _RObjects.array[handle];
 }
 
 void _initializeRenderObjectArray()
 {
-	_renderObjects.maxSize = 100000;
-	_renderObjects.nextPos = 0;
-	_renderObjects.array = malloc(sizeof(RObject*) * _renderObjects.maxSize);
+	_RObjects.maxSize = _RObjectMaxSize;
+	_RObjects.nextPos = 0;
 }
 
 void RotateRObject(int handle, float degree) {
-	_renderObjects.array[handle]->rotateDegree += degree;
-	if (_renderObjects.array[handle]->rotateDegree > 360) _renderObjects.array[handle]->rotateDegree -= 360;
-	else if (_renderObjects.array[handle]->rotateDegree < 0) _renderObjects.array[handle]->rotateDegree += 360;
+	_RObjects.array[handle]->rotateDegree += degree;
+	if (_RObjects.array[handle]->rotateDegree >= 360) _RObjects.array[handle]->rotateDegree -= 360;
+	else if (_RObjects.array[handle]->rotateDegree < 0) _RObjects.array[handle]->rotateDegree += 360;
+
+	_rotateRObject(_RObjects.array[handle], _RObjects.array[handle]->rotateDegree);
 }
 
 void _rotateRObject(RObject* obj, float degree) {
@@ -43,20 +47,41 @@ void _rotateRObject(RObject* obj, float degree) {
 		else if (i == 2) { preX = -ax; preY = ay; }
 		_X = preX * cosv - preY * sinv;
 		_Y = preX * sinv + preY * cosv;
-		obj->rotatePoint[i].x = (long)(obj->xPos + _X);
-		obj->rotatePoint[i].y = (long)(obj->yPos + _Y);
+		obj->rotatePoint[i].x = (long)( _X + obj->diagSize / 2);
+		obj->rotatePoint[i].y = (long)( _Y + obj->diagSize / 2);
 	}
+	BitBlt(obj->RotatedImage, 0,0, obj->diagSize, obj->diagSize, obj->RotatedImage, 0, 0, WHITENESS);
+	BitBlt(obj->RotatedMaskImage, 0, 0, obj->diagSize, obj->diagSize, obj->RotatedMaskImage, 0, 0, WHITENESS);
+
+	PlgBlt(obj->RotatedImage, obj->rotatePoint, obj->img->Image,
+		0, 0, obj->img->width, obj->img->height,
+		NULL, 0, 0);
+
+	PlgBlt(obj->RotatedMaskImage, obj->rotatePoint, obj->img->Image,
+		0, 0, obj->img->width, obj->img->height,
+		NULL, 0, 0);
 }
 
 int _registerRObject(sImage *obj) {
-	assert(_renderObjects.nextPos <= _renderObjects.maxSize);
+	assert(_RObjects.nextPos <= _RObjects.maxSize);
 	RObject* newObject = (RObject*)malloc(sizeof(RObject));
 	if (newObject) {
 		newObject->img = obj;
 		newObject->xPos = newObject->img->width / 2;
 		newObject->yPos = newObject->img->height / 2;
 
-		newObject->rotatePoint = (LPPOINT)malloc(sizeof(POINT) * 3);
+		newObject->diagSize = (int)sqrt(pow2(newObject->img->width) + pow2(newObject->img->height));
+
+		newObject->RotatedImage = CreateCompatibleDC(BackDC);
+		newObject->RotatedBitmap = CreateCompatibleBitmap(BackDC, 
+			newObject->diagSize, newObject->diagSize);
+		SelectObject(newObject->RotatedImage, newObject->RotatedBitmap);
+
+		newObject->RotatedMaskImage = CreateCompatibleDC(BackDC);
+		newObject->RotatedMaskBitmap = CreateCompatibleBitmap(newObject->RotatedMaskImage,
+			newObject->diagSize, newObject->diagSize);
+		SelectObject(newObject->RotatedMaskImage, newObject->RotatedMaskBitmap);
+
 		if (newObject->rotatePoint) {
 			newObject->rotatePoint[0].x = newObject->xPos;
 			newObject->rotatePoint[0].y = newObject->yPos;
@@ -66,19 +91,19 @@ int _registerRObject(sImage *obj) {
 			newObject->rotatePoint[2].y = newObject->yPos + newObject->img->height;
 			newObject->rotateDegree = 0.0f;
 		}
-		_renderObjects.array[_renderObjects.nextPos] = newObject;
+		_RObjects.array[_RObjects.nextPos] = newObject;
 	}
-	return _renderObjects.nextPos++;
+	return _RObjects.nextPos++;
 }
 
 void _disposeRObjectArray() {
-	for (int i = 0; i < _renderObjects.nextPos; ++i) {
-		DeleteDC(_renderObjects.array[i]->img->Image);
-		DeleteDC(_renderObjects.array[i]->img->Mask);
-		DeleteObject(_renderObjects.array[i]->img->bitmap);
-		free(_renderObjects.array[i]->rotatePoint);
-		free(_renderObjects.array[i]->img);
-		free(_renderObjects.array[i]);
+	for (int i = 0; i < _RObjects.nextPos; ++i) {
+		DeleteDC(_RObjects.array[i]->img->Image);
+		DeleteDC(_RObjects.array[i]->img->Mask);
+		DeleteDC(_RObjects.array[i]->RotatedImage);
+		DeleteObject(_RObjects.array[i]->img->bitmap);
+		DeleteObject(_RObjects.array[i]->RotatedBitmap);
+		free(_RObjects.array[i]->img);
+		free(_RObjects.array[i]);
 	}
-	free(_renderObjects.array);
 }

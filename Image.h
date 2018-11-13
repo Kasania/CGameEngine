@@ -5,6 +5,9 @@
 #include <assert.h>
 
 #define PI 3.14159265358979323846
+#define pow2(x) x*x
+
+#define _RObjectMaxSize 100000
 
 typedef struct sImage {
 	HBITMAP bitmap;
@@ -16,19 +19,26 @@ typedef struct sImage {
 
 typedef struct RenderingObject {
 	sImage *img;
+	int diagSize;
 	int xPos;
 	int yPos;
+
+	HDC RotatedImage;
+	HDC RotatedMaskImage;
+	HBITMAP RotatedBitmap;
+	HBITMAP RotatedMaskBitmap;
 	float rotateDegree;
-	POINT *rotatePoint;
+	POINT rotatePoint[3];
 }RObject;
 
 typedef struct RenderingObjectArray {
 	int maxSize;
 	int nextPos;
-	RObject** array;
+	RObject* array[_RObjectMaxSize];
 }RObjectArray;
 
-RObjectArray _renderObjects;
+
+RObjectArray _RObjects;
 
 RObject* GetRObject(int handle);
 

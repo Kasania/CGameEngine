@@ -6,7 +6,6 @@
 */
 
 extern HDC FrontDC;
-//extern RObjectArray _renderObjects;
 
 void InitializeImageLoader() {
 	
@@ -18,6 +17,7 @@ int GetRenderObjectHandle(LPCWSTR BMPpath) {
 	if (dst) {
 		dst->bitmap = (HBITMAP)LoadImage(NULL, BMPpath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION | LR_VGACOLOR);
 		GetObject(dst->bitmap, sizeof(BITMAP), &tmpBtm);
+
 		dst->width = tmpBtm.bmWidth;
 		dst->height = tmpBtm.bmHeight;
 		dst->Image = CreateCompatibleDC(FrontDC);

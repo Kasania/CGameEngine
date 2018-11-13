@@ -1,6 +1,5 @@
 #pragma once
 #include <Windows.h>
-
 HWND Window;
 HDC FrontDC;
 HDC BackDC;
@@ -11,3 +10,5 @@ void DisposeScreen();
 void _adjustScreenSize();
 
 extern void _disposeRObjectArray();
+extern void SwapBuffer();
+extern void resetBuffer();

@@ -15,10 +15,9 @@ void InitializeScreen(int XSize, int YSize) {
 	Cursor.bVisible = 0;
 	Cursor.dwSize = 0;
 	SetConsoleCursorInfo(ConsoleOut, &Cursor);
-
 	system("echo off");
 	system("cls");
-
+	
 	_adjustScreenSize();
 
 	FrontDC = GetDC(Window);
@@ -26,17 +25,15 @@ void InitializeScreen(int XSize, int YSize) {
 	RenderBuffer = CreateCompatibleBitmap(FrontDC, ScreenXSize, ScreenYSize);
 	SelectObject(BackDC, RenderBuffer);
 
-	//int e = GetLastError();
-	//printf("%d", e);
 }
 
 void DisposeScreen() {
 	_disposeRObjectArray();
-	
+	resetBuffer();
+	SwapBuffer();
 	DeleteDC(BackDC);
 	ReleaseDC(Window, FrontDC);
 	DeleteObject(RenderBuffer);
-	
 }
 
 void _adjustScreenSize() {
@@ -58,7 +55,5 @@ void _adjustScreenSize() {
 	
 	SetConsoleWindowInfo(ConsoleOut, TRUE, &consoleSize);
 	SetConsoleScreenBufferSize(ConsoleOut, consoleBuffer);
-	
-	/*int e = GetLastError();
-	printf("%d", e);*/
+
 }
